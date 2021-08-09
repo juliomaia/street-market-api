@@ -7,7 +7,7 @@ import (
 //Reader interface
 type Reader interface {
 	Get(id entity.ID) (*entity.StreetMarket, error)
-	Search(query string) ([]*entity.StreetMarket, error)
+	Search(distrito string, regiao5 string, nomeFeira string, bairro string) ([]*entity.StreetMarket, error)
 	List() ([]*entity.StreetMarket, error)
 }
 

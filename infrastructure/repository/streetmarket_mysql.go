@@ -82,15 +82,33 @@ func (r *StreetMarketMySQL) Update(e *entity.StreetMarket) error {
 }
 
 //Search street markets
-func (r *StreetMarketMySQL) Search(query string) ([]*entity.StreetMarket, error) {
-	stmt, err := r.db.Prepare(`select * from street_market where name_feira like ?`)
+func (r *StreetMarketMySQL) Search(distrito string, regiao5 string, nomeFeira string, bairro string) ([]*entity.StreetMarket, error) {
+	//Added 1=1 condition to make an easier query string
+	query := "select * from street_market where 1=1"
+
+	// if distrito != "" {
+	// 	query = query + "and distrito like ?"
+	// }
+
+	// if regiao5 != "" {
+	// 	query = query + "and regiao5 like ?"
+	// }
+
+	if nomeFeira != "" {
+		query = query + "and name_feira like ?"
+	}
+	// if bairro != "" {
+	// 	query = query + "and bairro like ?"
+	// }
+
+	stmt, err := r.db.Prepare(query)
 	if err != nil {
 		return nil, err
 	}
 
 	var streetMarkets []*entity.StreetMarket
 
-	rows, err := stmt.Query("%" + query + "%")
+	rows, err := stmt.Query("%" + nomeFeira + "%")
 	if err != nil {
 		return nil, err
 	}
@@ -100,8 +118,7 @@ func (r *StreetMarketMySQL) Search(query string) ([]*entity.StreetMarket, error)
 		err = rows.Scan(&sm.ID, &sm.Long, &sm.Lat, &sm.Setcens, &sm.Areap, sm.Coddist,
 			&sm.Distrito, &sm.Codsubpref, &sm.Subprefe,
 			&sm.Regiao5, &sm.Regiao8, &sm.NomeFeira, &sm.Registro,
-			&sm.Logradouro, &sm.Numero, &sm.Bairro, &sm.Referencia,
-			&sm.CreatedAt, &sm.UpdatedAt)
+			&sm.Logradouro, &sm.Numero, &sm.Bairro, &sm.Referencia)
 
 		if err != nil {
 			return nil, err

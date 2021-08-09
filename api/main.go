@@ -16,6 +16,7 @@ import (
 	"github.com/juliomaia/street-market-api/config"
 	"github.com/juliomaia/street-market-api/infrastructure/repository"
 	"github.com/juliomaia/street-market-api/middleware"
+	"github.com/juliomaia/street-market-api/pkg/metric"
 	"github.com/juliomaia/street-market-api/usecase/streetmarket"
 )
 
@@ -32,9 +33,15 @@ func main() {
 	streetMarketRepo := repository.NewStreetMarketMySQL(db)
 	streetMarketService := streetmarket.NewService(streetMarketRepo)
 
-	///handlers
+	metricService, err := metric.NewPrometheusService()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	//handlers
 	n := negroni.New(
 		negroni.HandlerFunc(middleware.Cors),
+		negroni.HandlerFunc(middleware.Metrics(metricService)),
 		negroni.NewLogger(),
 	)
 

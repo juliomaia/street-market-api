@@ -8,8 +8,8 @@ import (
 )
 
 func TestNewStreetMarket(t *testing.T) {
-	longitude := -23.538862
-	latitude := -46.6048588
+	lon := -23.538862
+	lat := -46.6048588
 	setcens := 66645649999
 	areap := 99945649999
 	coddist := 99
@@ -25,7 +25,7 @@ func TestNewStreetMarket(t *testing.T) {
 	bairro := "Brás"
 	referencia := "Praça do Rolo"
 
-	sm, err := entity.NewStreetMarket(longitude, latitude, setcens, areap, coddist, distrito, codsubpref, subprefe, regiao5, regiao8, nomeFeira, registro, logradouro, numero, bairro, referencia)
+	sm, err := entity.NewStreetMarket(lon, lat, setcens, areap, coddist, distrito, codsubpref, subprefe, regiao5, regiao8, nomeFeira, registro, logradouro, numero, bairro, referencia)
 	assert.Nil(t, err)
 	assert.Equal(t, sm.NomeFeira, "Feira do Rolo")
 	assert.Equal(t, sm.Logradouro, "Avenida Celso Garcia")

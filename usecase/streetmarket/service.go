@@ -1,7 +1,6 @@
 package streetmarket
 
 import (
-	"strings"
 	"time"
 
 	"github.com/juliomaia/street-market-api/entity"
@@ -44,8 +43,8 @@ func (s *Service) GetStreetMarket(id entity.ID) (*entity.StreetMarket, error) {
 }
 
 //SearchStreetMarkets search streetMarkets
-func (s *Service) SearchStreetMarkets(query string) ([]*entity.StreetMarket, error) {
-	streetMarkets, err := s.repo.Search(strings.ToLower(query))
+func (s *Service) SearchStreetMarkets(distrito string, regiao5 string, nomeFeira string, bairro string) ([]*entity.StreetMarket, error) {
+	streetMarkets, err := s.repo.Search(distrito, regiao5, nomeFeira, bairro)
 	if err != nil {
 		return nil, err
 	}
