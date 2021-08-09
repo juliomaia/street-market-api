@@ -41,7 +41,7 @@ func main() {
 	defer db.Close()
 	repo := repository.NewStreetMarketMySQL(db)
 	service := streetmarket.NewService(repo)
-	all, err := service.SearchStreetMarkets(query)
+	all, err := service.SearchStreetMarkets("", "", query, "")
 	if err != nil {
 		log.Fatal(err)
 	}
