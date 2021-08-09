@@ -1,3 +1,5 @@
+// +build staging
+
 package config
 
 const (

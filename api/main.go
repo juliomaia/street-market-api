@@ -13,9 +13,9 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/juliomaia/street-market-api/api/handler"
+	"github.com/juliomaia/street-market-api/api/middleware"
 	"github.com/juliomaia/street-market-api/config"
 	"github.com/juliomaia/street-market-api/infrastructure/repository"
-	"github.com/juliomaia/street-market-api/middleware"
 	"github.com/juliomaia/street-market-api/pkg/metric"
 	"github.com/juliomaia/street-market-api/usecase/streetmarket"
 )
