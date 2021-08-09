@@ -1,7 +1,6 @@
 package streetmarket
 
 import (
-	"math/big"
 	"strings"
 	"time"
 
@@ -20,9 +19,8 @@ func NewService(r Repository) *Service {
 	}
 }
 
-//TODO: implement
 //CreateStreetMarket create a book
-func (s *Service) CreateStreetMarket(long float32, lat float32, setcens big.Int, areap big.Int, coddist int, distrito string, codsubpref int, subprefe string, regiao5 string, regiao8 string, nomeFeira string, registro string, logradouro string, numero string, bairro string, referencia string) (entity.ID, error) {
+func (s *Service) CreateStreetMarket(long float64, lat float64, setcens int, areap int, coddist int, distrito string, codsubpref int, subprefe string, regiao5 string, regiao8 string, nomeFeira string, registro string, logradouro string, numero string, bairro string, referencia string) (entity.ID, error) {
 	sm, err := entity.NewStreetMarket(long, lat, setcens, areap, coddist, distrito,
 		codsubpref, subprefe, regiao5, regiao8, nomeFeira,
 		registro, logradouro, numero, bairro, referencia)

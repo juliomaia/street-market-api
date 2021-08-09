@@ -7,4 +7,5 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/mux v1.8.0
+	golang.org/x/tools v0.1.5 // indirect
 )

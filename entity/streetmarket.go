@@ -1,17 +1,16 @@
 package entity
 
 import (
-	"math/big"
 	"time"
 )
 
 //StreetMarket data
 type StreetMarket struct {
 	ID         ID
-	Long       float32
-	Lat        float32
-	Setcens    big.Int
-	Areap      big.Int
+	Long       float64
+	Lat        float64
+	Setcens    int
+	Areap      int
 	Coddist    int
 	Distrito   string
 	Codsubpref int
@@ -29,7 +28,10 @@ type StreetMarket struct {
 }
 
 //NewStreetMarket create a new StreetMarket
-func NewStreetMarket(long float32, lat float32, setcens big.Int, areap big.Int, coddist int, distrito string, codsubpref int, subprefe string, regiao5 string, regiao8 string, nomeFeira string, registro string, logradouro string, numero string, bairro string, referencia string) (*StreetMarket, error) {
+func NewStreetMarket(long float64, lat float64, setcens int, areap int, coddist int, distrito string, codsubpref int, subprefe string, regiao5 string, regiao8 string, nomeFeira string, registro string, logradouro string, numero string, bairro string, referencia string) (*StreetMarket, error) {
+
+	current_timestamp := time.Now()
+
 	sm := &StreetMarket{
 		ID:         NewID(),
 		Long:       long,
@@ -48,8 +50,8 @@ func NewStreetMarket(long float32, lat float32, setcens big.Int, areap big.Int, 
 		Numero:     numero,
 		Bairro:     bairro,
 		Referencia: referencia,
-		CreatedAt:  time.Now(),
-		UpdatedAt:  time.Time{},
+		CreatedAt:  current_timestamp,
+		UpdatedAt:  current_timestamp,
 	}
 
 	err := sm.Validate()
