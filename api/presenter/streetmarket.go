@@ -1,7 +1,6 @@
 package presenter
 
 import (
-	"math/big"
 	"time"
 
 	"github.com/juliomaia/street-market-api/entity"
@@ -21,10 +20,10 @@ type StreetMarket struct {
 	Regiao5    string    `json:"regiao5"`
 	Regiao8    string    `json:"regiao8"`
 	Registro   string    `json:"registro"`
-	Long       float32   `json:"long"`
-	Lat        float32   `json:"lat"`
-	Setcens    big.Int   `json:"setcens"`
-	Areap      big.Int   `json:"areap"`
+	Long       float64   `json:"long"`
+	Lat        float64   `json:"lat"`
+	Setcens    int       `json:"setcens"`
+	Areap      int       `json:"areap"`
 	Referencia string    `json:"referencia"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`

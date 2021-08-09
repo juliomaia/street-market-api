@@ -27,9 +27,9 @@ type Repository interface {
 //UseCase interface
 type UseCase interface {
 	GetStreetMarket(id entity.ID) (*entity.StreetMarket, error)
-	SearchStreetMarkets(query string) ([]*entity.StreetMarket, error)
+	SearchStreetMarkets(distrito string, regiao5 string, nomeFeira string, bairro string) ([]*entity.StreetMarket, error)
 	ListStreetMarkets() ([]*entity.StreetMarket, error)
-	// CreateStreetMarket(title string, author string, pages int, quantity int) (entity.ID, error)
+	CreateStreetMarket(long float64, lat float64, setcens int, areap int, coddist int, distrito string, codsubpref int, subprefe string, regiao5 string, regiao8 string, nomeFeira string, registro string, logradouro string, numero string, bairro string, referencia string) (entity.ID, error)
 	UpdateStreetMarket(e *entity.StreetMarket) error
 	DeleteStreetMarket(id entity.ID) error
 }

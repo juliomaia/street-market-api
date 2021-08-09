@@ -279,6 +279,21 @@ func (m *MockUseCase) EXPECT() *MockUseCaseMockRecorder {
 	return m.recorder
 }
 
+// CreateStreetMarket mocks base method.
+func (m *MockUseCase) CreateStreetMarket(long, lat float64, setcens, areap, coddist int, distrito string, codsubpref int, subprefe, regiao5, regiao8, nomeFeira, registro, logradouro, numero, bairro, referencia string) (entity.ID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateStreetMarket", long, lat, setcens, areap, coddist, distrito, codsubpref, subprefe, regiao5, regiao8, nomeFeira, registro, logradouro, numero, bairro, referencia)
+	ret0, _ := ret[0].(entity.ID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateStreetMarket indicates an expected call of CreateStreetMarket.
+func (mr *MockUseCaseMockRecorder) CreateStreetMarket(long, lat, setcens, areap, coddist, distrito, codsubpref, subprefe, regiao5, regiao8, nomeFeira, registro, logradouro, numero, bairro, referencia interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateStreetMarket", reflect.TypeOf((*MockUseCase)(nil).CreateStreetMarket), long, lat, setcens, areap, coddist, distrito, codsubpref, subprefe, regiao5, regiao8, nomeFeira, registro, logradouro, numero, bairro, referencia)
+}
+
 // DeleteStreetMarket mocks base method.
 func (m *MockUseCase) DeleteStreetMarket(id entity.ID) error {
 	m.ctrl.T.Helper()
@@ -324,18 +339,18 @@ func (mr *MockUseCaseMockRecorder) ListStreetMarkets() *gomock.Call {
 }
 
 // SearchStreetMarkets mocks base method.
-func (m *MockUseCase) SearchStreetMarkets(query string) ([]*entity.StreetMarket, error) {
+func (m *MockUseCase) SearchStreetMarkets(distrito, regiao5, nomeFeira, bairro string) ([]*entity.StreetMarket, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchStreetMarkets", query)
+	ret := m.ctrl.Call(m, "SearchStreetMarkets", distrito, regiao5, nomeFeira, bairro)
 	ret0, _ := ret[0].([]*entity.StreetMarket)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchStreetMarkets indicates an expected call of SearchStreetMarkets.
-func (mr *MockUseCaseMockRecorder) SearchStreetMarkets(query interface{}) *gomock.Call {
+func (mr *MockUseCaseMockRecorder) SearchStreetMarkets(distrito, regiao5, nomeFeira, bairro interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchStreetMarkets", reflect.TypeOf((*MockUseCase)(nil).SearchStreetMarkets), query)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchStreetMarkets", reflect.TypeOf((*MockUseCase)(nil).SearchStreetMarkets), distrito, regiao5, nomeFeira, bairro)
 }
 
 // UpdateStreetMarket mocks base method.

@@ -7,9 +7,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/eminetto/clean-architecture-go/pkg/metric"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/juliomaia/street-market-api/config"
 	"github.com/juliomaia/street-market-api/infrastructure/repository"
+	"github.com/juliomaia/street-market-api/pkg/metric"
+	"github.com/juliomaia/street-market-api/usecase/streetmarket"
 )
 
 func handleParams() (string, error) {
@@ -38,13 +40,13 @@ func main() {
 	}
 	defer db.Close()
 	repo := repository.NewStreetMarketMySQL(db)
-	service := streetMarket.NewService(repo)
+	service := streetmarket.NewService(repo)
 	all, err := service.SearchStreetMarkets(query)
 	if err != nil {
 		log.Fatal(err)
 	}
 	for _, j := range all {
-		fmt.Printf("%s %s \n", j.Title, j.Author)
+		fmt.Printf("%s %s \n", j.NomeFeira, j.Registro)
 	}
 	appMetric.Finished()
 	err = metricService.SaveCLI(appMetric)

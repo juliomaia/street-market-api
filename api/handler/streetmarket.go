@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"log"
-	"math/big"
 	"net/http"
 
 	"github.com/codegangsta/negroni"
@@ -19,13 +18,16 @@ func listStreetMarkets(service streetmarket.UseCase) http.Handler {
 		var data []*entity.StreetMarket
 		var err error
 
+		distrito := r.URL.Query().Get("distrito")
+		regiao5 := r.URL.Query().Get("regiao5")
 		nomeFeira := r.URL.Query().Get("nome_feira")
+		bairro := r.URL.Query().Get("bairro")
+
 		switch {
-		case nomeFeira == "":
-			data, err = service.ListStreetMarkets
+		case nomeFeira != "" || distrito != "" || regiao5 != "" || bairro != "":
+			data, err = service.SearchStreetMarkets(distrito, regiao5, nomeFeira, bairro)
 		default:
-			data, err = service.ListStreetMarkets
-			//TODO: data, err = service.SearchStreetMarkets()
+			data, err = service.ListStreetMarkets()
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -122,7 +124,7 @@ func getStreetMarket(service streetmarket.UseCase) http.Handler {
 	})
 }
 
-func createBook(service streetmarket.UseCase) http.Handler {
+func createStreetMarket(service streetmarket.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		errorMessage := "Error adding street market"
 		var input struct {
@@ -137,10 +139,10 @@ func createBook(service streetmarket.UseCase) http.Handler {
 			Regiao5    string  `json:"regiao5"`
 			Regiao8    string  `json:"regiao8"`
 			Registro   string  `json:"registro"`
-			Long       float32 `json:"long"`
-			Lat        float32 `json:"lat"`
-			Setcens    big.Int `json:"setcens"`
-			Areap      big.Int `json:"areap"`
+			Long       float64 `json:"long"`
+			Lat        float64 `json:"lat"`
+			Setcens    int     `json:"setcens"`
+			Areap      int     `json:"areap"`
 			Referencia string  `json:"referencia"`
 		}
 		err := json.NewDecoder(r.Body).Decode(&input)
@@ -150,23 +152,59 @@ func createBook(service streetmarket.UseCase) http.Handler {
 			w.Write([]byte(errorMessage))
 			return
 		}
-		id, err := service.CreateBook(input.Title, input.Author, input.Pages, input.Quantity)
+		// id, err := service.CreateBook(input.Title, input.Author, input.Pages, input.Quantity)
+		id, err := service.CreateStreetMarket(input.Long, input.Lat, input.Setcens, input.Areap,
+			input.Coddist, input.Distrito, input.Codsubpref,
+			input.Subprefe, input.Regiao5, input.Regiao8, input.NomeFeira,
+			input.Registro, input.Logradouro, input.Numero, input.Bairro, input.Referencia)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(errorMessage))
 			return
 		}
-		toJ := &presenter.Book{
-			ID:       id,
-			Title:    input.Title,
-			Author:   input.Author,
-			Pages:    input.Pages,
-			Quantity: input.Quantity,
+
+		toJ := &presenter.StreetMarket{
+			ID:         id,
+			Long:       input.Long,
+			Lat:        input.Lat,
+			Setcens:    input.Setcens,
+			Areap:      input.Areap,
+			Coddist:    input.Coddist,
+			Distrito:   input.Distrito,
+			Codsubpref: input.Codsubpref,
+			Subprefe:   input.Subprefe,
+			Regiao5:    input.Regiao5,
+			Regiao8:    input.Regiao8,
+			NomeFeira:  input.NomeFeira,
+			Registro:   input.Registro,
+			Logradouro: input.Logradouro,
+			Numero:     input.Numero,
+			Bairro:     input.Bairro,
+			Referencia: input.Referencia,
 		}
 
 		w.WriteHeader(http.StatusCreated)
 		if err := json.NewEncoder(w).Encode(toJ); err != nil {
 			log.Println(err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(errorMessage))
+			return
+		}
+	})
+}
+
+func deleteStreetMarket(service streetmarket.UseCase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		errorMessage := "Error removing street market"
+		vars := mux.Vars(r)
+		id, err := entity.StringToID(vars["id"])
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(errorMessage))
+			return
+		}
+		err = service.DeleteStreetMarket(id)
+		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(errorMessage))
 			return
@@ -180,15 +218,15 @@ func MakeStreetMarketHandlers(r *mux.Router, n negroni.Negroni, service streetma
 		negroni.Wrap(listStreetMarkets(service)),
 	)).Methods("GET", "OPTIONS").Name("listStreetMarkets")
 
-	// r.Handle("/v1/streetmarket", n.With(
-	// 	negroni.Wrap(createStreetMarket(service)),
-	// )).Methods("POST", "OPTIONS").Name("createStreetMarket")
+	r.Handle("/v1/streetmarket", n.With(
+		negroni.Wrap(createStreetMarket(service)),
+	)).Methods("POST", "OPTIONS").Name("createStreetMarket")
 
 	r.Handle("/v1/streetmarket/{id}", n.With(
 		negroni.Wrap(getStreetMarket(service)),
 	)).Methods("GET", "OPTIONS").Name("getStreetMarket")
 
-	// r.Handle("/v1/streetmarket/{id}", n.With(
-	// 	negroni.Wrap(deleteStreetMarket(service)),
-	// )).Methods("DELETE", "OPTIONS").Name("deleteBook")
+	r.Handle("/v1/streetmarket/{id}", n.With(
+		negroni.Wrap(deleteStreetMarket(service)),
+	)).Methods("DELETE", "OPTIONS").Name("deleteStreetMarket")
 }
