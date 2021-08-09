@@ -1,0 +1,42 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password --init-file /data/application/create_database.sql
+    volumes:
+      - ./ops/db/create_database.sql:/data/application/create_database.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 5tr33t_m4rk3t_r00t
+      MYSQL_DATABASE: street_market_db
+      MYSQL_USER: street_market_api
+      MYSQL_PASSWORD: 5tr33t_m4rk3t
+    ports:
+      - "3306:3306"
+    container_name: street-market-mysql
+    network_mode: "bridge"
+#   grafana:
+#     image: grafana/grafana
+#     ports:
+#       - "3000:3000"
+#     container_name: clean-architecture-go-v2-grafana
+#     network_mode: "bridge"
+#     depends_on:
+#       - prometheus
+#       - prometheus-pushgateway
+#   prometheus:
+#     image: prom/prometheus
+#     ports:
+#       - 9090:9090
+#     command:
+#       - --config.file=/etc/prometheus/prometheus.yml
+#     volumes:
+#       - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#     container_name: clean-architecture-go-v2-prometheus
+#     network_mode: "bridge"
+#   prometheus-pushgateway:
+#     image: prom/pushgateway
+#     container_name: clean-architecture-go-v2-pushgateway
+#     expose:
+#       - 9091
+#     ports:
+#       - "9091:9091"
