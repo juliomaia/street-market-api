@@ -2,6 +2,8 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
+	"math/big"
 	"net/http"
 
 	"github.com/codegangsta/negroni"
@@ -116,6 +118,58 @@ func getStreetMarket(service streetmarket.UseCase) http.Handler {
 		if err := json.NewEncoder(w).Encode(toJ); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(errorMessage))
+		}
+	})
+}
+
+func createBook(service streetmarket.UseCase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		errorMessage := "Error adding street market"
+		var input struct {
+			NomeFeira  string  `json:"nome_feira"`
+			Logradouro string  `json:"logradouro"`
+			Numero     string  `json:"numero"`
+			Bairro     string  `json:"bairro"`
+			Coddist    int     `json:"coddist"`
+			Distrito   string  `json:"distrito"`
+			Codsubpref int     `json:"codsubpref"`
+			Subprefe   string  `json:"subpref"`
+			Regiao5    string  `json:"regiao5"`
+			Regiao8    string  `json:"regiao8"`
+			Registro   string  `json:"registro"`
+			Long       float32 `json:"long"`
+			Lat        float32 `json:"lat"`
+			Setcens    big.Int `json:"setcens"`
+			Areap      big.Int `json:"areap"`
+			Referencia string  `json:"referencia"`
+		}
+		err := json.NewDecoder(r.Body).Decode(&input)
+		if err != nil {
+			log.Println(err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(errorMessage))
+			return
+		}
+		id, err := service.CreateBook(input.Title, input.Author, input.Pages, input.Quantity)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(errorMessage))
+			return
+		}
+		toJ := &presenter.Book{
+			ID:       id,
+			Title:    input.Title,
+			Author:   input.Author,
+			Pages:    input.Pages,
+			Quantity: input.Quantity,
+		}
+
+		w.WriteHeader(http.StatusCreated)
+		if err := json.NewEncoder(w).Encode(toJ); err != nil {
+			log.Println(err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(errorMessage))
+			return
 		}
 	})
 }

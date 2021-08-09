@@ -66,5 +66,6 @@ func (sm *StreetMarket) Validate() error {
 	if sm.NomeFeira == "" || sm.Logradouro == "" {
 		return ErrInvalidEntity
 	}
+
 	return nil
 }
